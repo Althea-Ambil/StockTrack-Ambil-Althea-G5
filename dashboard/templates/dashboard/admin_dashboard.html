@@ -31,6 +31,17 @@
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            color: #287a42;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -72,46 +83,102 @@
         Manage and monitor your StockTrack system.
     </p>
 
+
+    <!-- System Messages -->
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-warning">
+
+            <div class="alert alert-warning alert-dismissible fade show">
+
                 {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
             </div>
+
         {% endfor %}
     {% endif %}
 
+
+    <!-- Dashboard Cards -->
     <div class="row g-4 mt-2">
 
+        <!-- Livestock Profiling -->
         <div class="col-md-4">
+
             <div class="dashboard-card">
-                <h5>User Management</h5>
+
+                <h5 class="card-title">
+                    Livestock Profiling
+                </h5>
+
+                <p class="text-muted">
+                    View, monitor, update, and manage all registered livestock records.
+                </p>
+
+                <a href="{% url 'livestock_list' %}"
+                   class="btn btn-success btn-sm">
+                    Manage Livestock
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- User Management -->
+        <div class="col-md-4">
+
+            <div class="dashboard-card">
+
+                <h5 class="card-title">
+                    User Management
+                </h5>
+
                 <p class="text-muted">
                     Manage registered StockTrack users.
                 </p>
+
+                <button class="btn btn-secondary btn-sm" disabled>
+                    Coming Soon
+                </button>
+
             </div>
+
         </div>
 
+
+        <!-- System Monitoring -->
         <div class="col-md-4">
+
             <div class="dashboard-card">
-                <h5>System Monitoring</h5>
+
+                <h5 class="card-title">
+                    System Monitoring
+                </h5>
+
                 <p class="text-muted">
                     Monitor system activities and records.
                 </p>
-            </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="dashboard-card">
-                <h5>Account Settings</h5>
-                <p class="text-muted">
-                    Manage your administrator account.
-                </p>
+                <button class="btn btn-secondary btn-sm" disabled>
+                    Coming Soon
+                </button>
+
             </div>
+
         </div>
 
     </div>
 
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
 </body>
 </html>
