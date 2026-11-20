@@ -37,17 +37,32 @@
 
 <body>
 
+<!-- Navigation Bar -->
 <nav class="navbar navbar-dark px-4 py-3">
+
     <span class="brand">StockTrack | Farmer</span>
 
-    <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button class="btn btn-light btn-sm" type="submit">
-            Logout
-        </button>
-    </form>
+    <div class="d-flex align-items-center gap-2">
+
+        <a href="{% url 'profile' %}"
+           class="btn btn-outline-light btn-sm">
+            My Profile
+        </a>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+
+            <button class="btn btn-light btn-sm" type="submit">
+                Logout
+            </button>
+        </form>
+
+    </div>
+
 </nav>
 
+
+<!-- Dashboard Content -->
 <div class="container py-5">
 
     <h2>Farmer Dashboard</h2>

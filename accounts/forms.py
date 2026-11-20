@@ -33,14 +33,16 @@ class FarmerRegistrationForm(UserCreationForm):
             })
 
     def clean_email(self):
-        email = self.cleaned_data.get("email")
+        email = self.cleaned_data.get("email").lower()
 
-        if CustomUser.objects.filter(email__iexact=email).exists():
+        if CustomUser.objects.filter(
+            email__iexact=email
+        ).exists():
             raise forms.ValidationError(
                 "This email address is already registered."
             )
 
-        return email.lower()
+        return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -51,3 +53,54 @@ class FarmerRegistrationForm(UserCreationForm):
             user.save()
 
         return user
+
+
+class ProfileUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomUser
+
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "contact_number",
+        ]
+
+        widgets = {
+            "first_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your first name",
+            }),
+
+            "last_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your last name",
+            }),
+
+            "email": forms.EmailInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your email",
+            }),
+
+            "contact_number": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your contact number",
+            }),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+
+        existing_user = CustomUser.objects.filter(
+            email__iexact=email
+        ).exclude(
+            pk=self.instance.pk
+        )
+
+        if existing_user.exists():
+            raise forms.ValidationError(
+                "This email address is already being used."
+            )
+
+        return email
