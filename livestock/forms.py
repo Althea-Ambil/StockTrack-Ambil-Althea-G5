@@ -26,45 +26,43 @@ class LivestockForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Example: PIG-001",
             }),
-
             "name": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter pig name",
             }),
-
             "breed": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Example: Large White",
             }),
-
             "sex": forms.Select(attrs={
                 "class": "form-select",
             }),
-
             "birth_date": forms.DateInput(attrs={
                 "class": "form-control",
                 "type": "date",
             }),
-
             "weight": forms.NumberInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter weight in kilograms",
                 "step": "0.01",
                 "min": "0.01",
             }),
-
             "acquisition_date": forms.DateInput(attrs={
                 "class": "form-control",
                 "type": "date",
             }),
-
             "status": forms.Select(attrs={
                 "class": "form-select",
             }),
         }
 
     def clean_tag_number(self):
-        tag_number = self.cleaned_data["tag_number"].strip().upper()
+        tag_number = self.cleaned_data.get("tag_number", "").strip().upper()
+
+        if not tag_number:
+            raise forms.ValidationError(
+                "Livestock tag number is required."
+            )
 
         existing = Livestock.objects.filter(
             tag_number__iexact=tag_number
@@ -77,8 +75,31 @@ class LivestockForm(forms.ModelForm):
 
         return tag_number
 
+    def clean_name(self):
+        name = self.cleaned_data.get("name", "").strip()
+
+        if not name:
+            raise forms.ValidationError(
+                "Livestock name is required."
+            )
+
+        return name
+
+    def clean_breed(self):
+        breed = self.cleaned_data.get("breed", "").strip()
+
+        if not breed:
+            raise forms.ValidationError(
+                "Livestock breed is required."
+            )
+
+        return breed
+
     def clean_weight(self):
-        weight = self.cleaned_data["weight"]
+        weight = self.cleaned_data.get("weight")
+
+        if weight is None:
+            return weight
 
         if weight <= 0:
             raise forms.ValidationError(
