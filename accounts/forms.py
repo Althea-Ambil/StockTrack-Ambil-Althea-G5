@@ -33,7 +33,7 @@ class FarmerRegistrationForm(UserCreationForm):
             })
 
     def clean_email(self):
-        email = self.cleaned_data.get("email").lower()
+        email = self.cleaned_data.get("email", "").strip().lower()
 
         if CustomUser.objects.filter(
             email__iexact=email
@@ -104,3 +104,23 @@ class ProfileUpdateForm(forms.ModelForm):
             )
 
         return email
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data["first_name"].strip()
+
+        if not first_name:
+            raise forms.ValidationError(
+                "First name cannot be empty."
+            )
+
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data["last_name"].strip()
+
+        if not last_name:
+            raise forms.ValidationError(
+                "Last name cannot be empty."
+            )
+
+        return last_name
