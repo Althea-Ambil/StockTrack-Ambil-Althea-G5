@@ -1,6 +1,7 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
 from accounts.models import CustomUser
@@ -15,11 +16,11 @@ def dashboard_redirect(request):
     if request.user.role == CustomUser.Role.ADMIN:
         return redirect("admin_dashboard")
 
-    elif request.user.role == CustomUser.Role.FARMER:
+    if request.user.role == CustomUser.Role.FARMER:
         return redirect("farmer_dashboard")
 
     messages.error(request, "Your account has an invalid role.")
-    return redirect("login")
+    raise PermissionDenied("Your account does not have a valid role.")
 
 
 @login_required
@@ -29,8 +30,13 @@ def admin_dashboard(request):
     """
 
     if request.user.role != CustomUser.Role.ADMIN:
-        messages.error(request, "You are not authorized to access that page.")
-        return redirect("dashboard")
+        messages.error(
+            request,
+            "You are not authorized to access that page."
+        )
+        raise PermissionDenied(
+            "Only administrators can access this dashboard."
+        )
 
     return render(
         request,
@@ -45,8 +51,13 @@ def farmer_dashboard(request):
     """
 
     if request.user.role != CustomUser.Role.FARMER:
-        messages.error(request, "You are not authorized to access that page.")
-        return redirect("dashboard")
+        messages.error(
+            request,
+            "You are not authorized to access that page."
+        )
+        raise PermissionDenied(
+            "Only farmers can access this dashboard."
+        )
 
     return render(
         request,
