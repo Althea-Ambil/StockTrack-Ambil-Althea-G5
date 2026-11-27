@@ -55,13 +55,8 @@ class Livestock(models.Model):
         related_name="livestock_records"
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -69,7 +64,17 @@ class Livestock(models.Model):
             models.CheckConstraint(
                 condition=models.Q(weight__gt=0),
                 name="livestock_weight_positive"
-            )
+            ),
+            models.CheckConstraint(
+                condition=models.Q(sex__in=["MALE", "FEMALE"]),
+                name="livestock_valid_sex"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(
+                    status__in=["ACTIVE", "SOLD", "DECEASED"]
+                ),
+                name="livestock_valid_status"
+            ),
         ]
 
     def __str__(self):
