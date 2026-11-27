@@ -16,3 +16,8 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")),
     path("livestock/", include("livestock.urls")),
 ]
+
+
+# Custom error handlers
+handler404 = "django.views.defaults.page_not_found"
+handler500 = "django.views.defaults.server_error"
